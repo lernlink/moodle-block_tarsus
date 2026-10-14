@@ -105,6 +105,21 @@ final class block_test extends \advanced_testcase {
     }
 
     /**
+     * Before the first visit there are no figures to show.
+     */
+    public function test_not_started_shows_no_figures(): void {
+        $this->resetAfterTest(true);
+        $data = $this->setup_course();
+
+        $content = $this->block_for($data['course'], $data['student'])->get_content();
+
+        $this->assertStringContainsString(get_string('notstarted', 'block_tarsus'), $content->text);
+        $this->assertStringNotContainsString(get_string('xp', 'block_tarsus'), $content->text);
+        $this->assertStringNotContainsString(get_string('grade', 'block_tarsus') . ':', $content->text);
+        $this->assertStringContainsString('block_tarsus__continue', $content->text);
+    }
+
+    /**
      * Once an activity is complete there is nothing to continue.
      */
     public function test_no_continue_when_everything_is_done(): void {

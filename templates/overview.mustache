@@ -44,9 +44,12 @@
                 <div class="progress-bar" style="width: {{progress}}%"></div>
             </div>
             <div class="small text-muted block_tarsus__figures">
+                {{^hasfigures}}<span>{{#str}}notstarted, block_tarsus{{/str}}</span>{{/hasfigures}}
+                {{#hasfigures}}
                 {{#hastest}}<span>{{xp}} / {{totalxp}} {{#str}}xp, block_tarsus{{/str}}</span>{{/hastest}}
                 {{#hasbuild}}<span>{{units}} / {{totalunits}} {{#str}}lu, block_tarsus{{/str}}</span>{{/hasbuild}}
                 {{#hasgrade}}<span>{{#str}}grade, block_tarsus{{/str}}: {{grade}}</span>{{/hasgrade}}
+                {{/hasfigures}}
                 {{#trackscompletion}}
                 <span class="{{#completed}}text-success{{/completed}}">
                     {{#completed}}{{#str}}completed, block_tarsus{{/str}}{{/completed}}

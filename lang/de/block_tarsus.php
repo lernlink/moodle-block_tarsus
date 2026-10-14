@@ -35,6 +35,7 @@ $string['xp'] = 'XP';
 $string['lu'] = 'LU';
 $string['grade'] = 'Bewertung';
 $string['completed'] = 'Abgeschlossen';
+$string['notstarted'] = 'Noch nicht begonnen';
 $string['notcompleted'] = 'Noch nicht abgeschlossen';
 $string['coursesummary'] = 'Kursübersicht';
 
