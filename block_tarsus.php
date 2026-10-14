@@ -52,13 +52,25 @@ class block_tarsus extends block_base {
      * @return stdClass The block content (text + footer).
      */
     public function get_content(): stdClass {
+        global $USER;
+
         if ($this->content !== null) {
             return $this->content;
         }
 
         $this->content = new stdClass();
-        $this->content->text = get_string('placeholder', 'block_tarsus');
+        $this->content->text = '';
         $this->content->footer = '';
+
+        // Nothing to say in a course without a Tarsus activity the viewer
+        // can open: an empty block stays hidden.
+        $overview = new \block_tarsus\output\overview((int) $this->page->course->id, (int) $USER->id);
+        if (!$overview->has_content()) {
+            return $this->content;
+        }
+        $renderer = $this->page->get_renderer('core');
+        $this->content->text = $renderer->render_from_template(
+            'block_tarsus/overview', $overview->export_for_template($renderer));
 
         return $this->content;
     }

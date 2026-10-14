@@ -1,0 +1,10 @@
+/* The Tarsus Lerncoach block: slim progress bars and compact figures. */
+.block_tarsus .block_tarsus__progress {
+    height: 6px;
+}
+
+.block_tarsus .block_tarsus__figures {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+}
