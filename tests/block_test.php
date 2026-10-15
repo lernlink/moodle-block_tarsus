@@ -99,8 +99,12 @@ final class block_test extends \advanced_testcase {
         $this->assertStringContainsString(get_string('continue_in', 'block_tarsus', $data['tz']->name), $content->text);
         $this->assertStringContainsString('70%', $content->text);
         $this->assertStringContainsString('3 / 9 ' . get_string('xp', 'block_tarsus'), $content->text);
-        $this->assertStringContainsString(get_string('grade', 'block_tarsus') . ': 67', $content->text);
+        $this->assertStringContainsString('9 / 9 ' . get_string('lu', 'block_tarsus'), $content->text);
+        $this->assertSame(12, substr_count($content->text, 'block_tarsus__segment block_tarsus__segment--filled'));
+        $this->assertStringContainsString(get_string('grade_chip', 'block_tarsus', 67), $content->text);
         $this->assertStringContainsString(get_string('completed', 'block_tarsus'), $content->text);
+        $this->assertStringContainsString(get_string('completed_of', 'block_tarsus', (object) ['done' => 1, 'total' => 1]),
+            $content->text);
         $this->assertStringNotContainsString(get_string('coursesummary', 'block_tarsus'), $content->text);
     }
 
@@ -115,7 +119,7 @@ final class block_test extends \advanced_testcase {
 
         $this->assertStringContainsString(get_string('notstarted', 'block_tarsus'), $content->text);
         $this->assertStringNotContainsString(get_string('xp', 'block_tarsus'), $content->text);
-        $this->assertStringNotContainsString(get_string('grade', 'block_tarsus') . ':', $content->text);
+        $this->assertStringNotContainsString('block_tarsus__chip', $content->text);
         $this->assertStringContainsString('block_tarsus__continue', $content->text);
     }
 
@@ -149,10 +153,65 @@ final class block_test extends \advanced_testcase {
         $content = $this->block_for($data['course'], $data['teacher'])->get_content();
 
         $this->assertStringContainsString(get_string('coursesummary', 'block_tarsus'), $content->text);
-        $this->assertStringContainsString(get_string('started', 'block_tarsus') . ': 1', $content->text);
-        $this->assertStringContainsString(get_string('avgprogress', 'block_tarsus') . ': 70%', $content->text);
-        $this->assertStringContainsString(get_string('avggrade', 'block_tarsus') . ': 67', $content->text);
-        $this->assertStringContainsString(get_string('completedcount', 'block_tarsus') . ': 1', $content->text);
+        $this->assertStringContainsString(get_string('n_completed', 'block_tarsus', 1), $content->text);
+        $this->assertStringContainsString(get_string('n_inprogress', 'block_tarsus', 0), $content->text);
+        $this->assertStringContainsString(get_string('n_notstarted', 'block_tarsus', 0), $content->text);
+        $this->assertStringContainsString(get_string('avggrade_chip', 'block_tarsus', 67), $content->text);
+        $this->assertStringContainsString('title="50–75: 1"', $content->text);
+    }
+
+    /**
+     * The teacher's stacked bar counts every enrolled student, including
+     * those who never opened the activity.
+     */
+    public function test_summary_counts_all_students(): void {
+        $this->resetAfterTest(true);
+        $data = $this->setup_course();
+        $second = $this->getDataGenerator()->create_user();
+        $third = $this->getDataGenerator()->create_user();
+        $this->getDataGenerator()->enrol_user($second->id, $data['course']->id, 'student');
+        $this->getDataGenerator()->enrol_user($third->id, $data['course']->id, 'student');
+        scoring::record($data['activity'], (int) $data['student']->id, [
+            'earnedxp' => 9, 'totalxp' => 9, 'earnedunits' => 9, 'totalunits' => 9,
+            'practiceprogress' => 100, 'learnprogress' => 100, 'progress' => 100,
+        ]);
+        scoring::record($data['activity'], (int) $second->id, [
+            'earnedxp' => 1, 'totalxp' => 9, 'earnedunits' => 0, 'totalunits' => 9,
+            'practiceprogress' => 10, 'learnprogress' => 0, 'progress' => 10,
+        ]);
+        // The teacher's own try must not count.
+        scoring::record($data['activity'], (int) $data['teacher']->id, [
+            'earnedxp' => 4, 'totalxp' => 9, 'earnedunits' => 4, 'totalunits' => 9,
+            'practiceprogress' => 44, 'learnprogress' => 44, 'progress' => 44,
+        ]);
+
+        $content = $this->block_for($data['course'], $data['teacher'])->get_content();
+
+        $this->assertStringContainsString(get_string('n_completed', 'block_tarsus', 1), $content->text);
+        $this->assertStringContainsString(get_string('n_inprogress', 'block_tarsus', 1), $content->text);
+        $this->assertStringContainsString(get_string('n_notstarted', 'block_tarsus', 1), $content->text);
+        $this->assertStringContainsString('title=" 0–25: 1"', $content->text);
+        $this->assertStringContainsString('title="25–50: 0"', $content->text);
+        $this->assertStringContainsString('title="75–100: 1"', $content->text);
+    }
+
+    /**
+     * Ring offsets and bars are computed as on the stack card.
+     */
+    public function test_ring_and_bar_geometry(): void {
+        $this->assertSame('56.55', \block_tarsus\output\overview::ring_offset(0));
+        $this->assertSame('0.00', \block_tarsus\output\overview::ring_offset(100));
+        $this->assertSame('28.28', \block_tarsus\output\overview::ring_offset(50));
+
+        $bar = \block_tarsus\output\overview::bar(2.5, 4, 'test', 'XP');
+        $this->assertTrue($bar['segmented']);
+        $this->assertSame('2.5', $bar['earned']);
+        $this->assertSame(63, $bar['percent']);
+        $this->assertSame([true, true, true, false], array_column($bar['segments'], 'filled'));
+
+        $bar = \block_tarsus\output\overview::bar(30, 36, 'build', 'LU');
+        $this->assertFalse($bar['segmented']);
+        $this->assertSame(83, $bar['percent']);
     }
 
     /**

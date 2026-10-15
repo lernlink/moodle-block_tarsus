@@ -17,16 +17,28 @@
 {{!
     @template block_tarsus/overview
 
-    The block's content: the learner's standing per Tarsus activity, a
-    "continue" link, and the teacher's per-activity summary.
+    The block's content: the learner's standing in the course and per Tarsus
+    activity, a "continue" link, and the teacher's per-activity summary.
 
     Context variables required for this template:
-    * activities - array of {name, url, progress, hasfigures, hastest, hasbuild, xp, totalxp, units, totalunits,
-      hasgrade, grade, trackscompletion, completed}.
+    * course - {progress, ringoffset, size, ringlabel, done, total}.
+    * activities - array of {name, url, progress, ringoffset, size, ringlabel, hasfigures, hastest, hasbuild,
+      xp, lu (bar contexts), hasgrade, grade, trackscompletion, completed}.
     * hascontinue, continue - {name, url}.
-    * isteacher, summary - array of {name, url, started, avgprogress, hasgrades, avggrade, completed}.
+    * isteacher, summary - array of {name, url, total, completed, inprogress, notstarted, completedpct,
+      inprogresspct, notstartedpct, progress, ringoffset, size, ringlabel, hasgrades, avggrade, hashistogram,
+      buckets: [{label, count, height}]}.
 }}
 <div class="block_tarsus__overview">
+    {{#course}}
+    <div class="block_tarsus__course d-flex align-items-center mb-3">
+        {{> block_tarsus/ring }}
+        <div class="ms-3">
+            <div class="fw-bold">{{#str}}courseprogress, block_tarsus{{/str}}</div>
+            <div class="small text-muted">{{#str}}completed_of, block_tarsus, { "done": "{{done}}", "total": "{{total}}" }{{/str}}</div>
+        </div>
+    </div>
+    {{/course}}
     {{#hascontinue}}
     <a class="btn btn-primary btn-sm w-100 mb-3 block_tarsus__continue" href="{{continue.url}}">
         {{#str}}continue_in, block_tarsus, {{continue.name}}{{/str}}
@@ -34,28 +46,22 @@
     {{/hascontinue}}
     <ul class="list-unstyled mb-0">
         {{#activities}}
-        <li class="block_tarsus__activity mb-3">
-            <div class="d-flex justify-content-between align-items-baseline">
+        <li class="block_tarsus__activity d-flex align-items-start mb-3">
+            {{> block_tarsus/ring }}
+            <div class="ms-2 flex-grow-1 block_tarsus__body">
                 <a class="block_tarsus__name fw-bold" href="{{url}}">{{name}}</a>
-                <span class="small text-muted">{{progress}}%</span>
-            </div>
-            <div class="progress block_tarsus__progress my-1" role="progressbar" aria-valuemin="0" aria-valuemax="100"
-                 aria-valuenow="{{progress}}" aria-label="{{#str}}progress, block_tarsus{{/str}}">
-                <div class="progress-bar" style="width: {{progress}}%"></div>
-            </div>
-            <div class="small text-muted block_tarsus__figures">
-                {{^hasfigures}}<span>{{#str}}notstarted, block_tarsus{{/str}}</span>{{/hasfigures}}
+                {{^hasfigures}}<div class="small text-muted">{{#str}}notstarted, block_tarsus{{/str}}</div>{{/hasfigures}}
                 {{#hasfigures}}
-                {{#hastest}}<span>{{xp}} / {{totalxp}} {{#str}}xp, block_tarsus{{/str}}</span>{{/hastest}}
-                {{#hasbuild}}<span>{{units}} / {{totalunits}} {{#str}}lu, block_tarsus{{/str}}</span>{{/hasbuild}}
-                {{#hasgrade}}<span>{{#str}}grade, block_tarsus{{/str}}: {{grade}}</span>{{/hasgrade}}
+                {{#hastest}}{{#xp}}{{> block_tarsus/bar }}{{/xp}}{{/hastest}}
+                {{#hasbuild}}{{#lu}}{{> block_tarsus/bar }}{{/lu}}{{/hasbuild}}
+                <div class="block_tarsus__chips">
+                    {{#hasgrade}}<span class="block_tarsus__chip">{{#str}}grade_chip, block_tarsus, {{grade}}{{/str}}</span>{{/hasgrade}}
+                    {{#trackscompletion}}
+                    {{#completed}}<span class="block_tarsus__chip block_tarsus__chip--done">{{#str}}completed, block_tarsus{{/str}}</span>{{/completed}}
+                    {{^completed}}<span class="block_tarsus__chip">{{#str}}notcompleted, block_tarsus{{/str}}</span>{{/completed}}
+                    {{/trackscompletion}}
+                </div>
                 {{/hasfigures}}
-                {{#trackscompletion}}
-                <span class="{{#completed}}text-success{{/completed}}">
-                    {{#completed}}{{#str}}completed, block_tarsus{{/str}}{{/completed}}
-                    {{^completed}}{{#str}}notcompleted, block_tarsus{{/str}}{{/completed}}
-                </span>
-                {{/trackscompletion}}
             </div>
         </li>
         {{/activities}}
@@ -64,14 +70,35 @@
     <h6 class="mt-3 mb-2">{{#str}}coursesummary, block_tarsus{{/str}}</h6>
     <ul class="list-unstyled mb-0 block_tarsus__summary">
         {{#summary}}
-        <li class="mb-2">
+        <li class="mb-3">
             <a class="block_tarsus__name fw-bold" href="{{url}}">{{name}}</a>
-            <div class="small text-muted block_tarsus__figures">
-                <span>{{#str}}started, block_tarsus{{/str}}: {{started}}</span>
-                <span>{{#str}}avgprogress, block_tarsus{{/str}}: {{avgprogress}}%</span>
-                <span>{{#str}}avggrade, block_tarsus{{/str}}: {{#hasgrades}}{{avggrade}}{{/hasgrades}}{{^hasgrades}}–{{/hasgrades}}</span>
-                <span>{{#str}}completedcount, block_tarsus{{/str}}: {{completed}}</span>
+            <div class="block_tarsus__stack my-1" role="img"
+                 aria-label="{{#str}}distribution, block_tarsus, { "completed": "{{completed}}", "inprogress": "{{inprogress}}", "notstarted": "{{notstarted}}" }{{/str}}">
+                <span class="block_tarsus__stack-part block_tarsus__stack-part--done" style="width: {{completedpct}}%"></span>
+                <span class="block_tarsus__stack-part block_tarsus__stack-part--open" style="width: {{inprogresspct}}%"></span>
+                <span class="block_tarsus__stack-part block_tarsus__stack-part--none" style="width: {{notstartedpct}}%"></span>
             </div>
+            <div class="small text-muted block_tarsus__legend">
+                <span><i class="block_tarsus__dot block_tarsus__dot--done"></i>{{#str}}n_completed, block_tarsus, {{completed}}{{/str}}</span>
+                <span><i class="block_tarsus__dot block_tarsus__dot--open"></i>{{#str}}n_inprogress, block_tarsus, {{inprogress}}{{/str}}</span>
+                <span><i class="block_tarsus__dot block_tarsus__dot--none"></i>{{#str}}n_notstarted, block_tarsus, {{notstarted}}{{/str}}</span>
+            </div>
+            <div class="d-flex align-items-center mt-2">
+                {{> block_tarsus/ring }}
+                <div class="ms-2 small text-muted">{{#str}}avgprogress, block_tarsus{{/str}}</div>
+                {{#hasgrades}}<span class="block_tarsus__chip ms-auto">{{#str}}avggrade_chip, block_tarsus, {{avggrade}}{{/str}}</span>{{/hasgrades}}
+            </div>
+            {{#hashistogram}}
+            <div class="block_tarsus__histogram mt-2" role="img" aria-label="{{#str}}histogram, block_tarsus{{/str}}">
+                {{#buckets}}
+                <div class="block_tarsus__bucket" title="{{label}}: {{count}}">
+                    <span class="block_tarsus__bucket-count">{{count}}</span>
+                    <span class="block_tarsus__bucket-bar"><span class="block_tarsus__bucket-fill" style="height: {{height}}%"></span></span>
+                    <span class="block_tarsus__bucket-label">{{label}}</span>
+                </div>
+                {{/buckets}}
+            </div>
+            {{/hashistogram}}
         </li>
         {{/summary}}
     </ul>

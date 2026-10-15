@@ -39,7 +39,14 @@ $string['notstarted'] = 'Noch nicht begonnen';
 $string['notcompleted'] = 'Noch nicht abgeschlossen';
 $string['coursesummary'] = 'Kursübersicht';
 
-$string['started'] = 'Begonnen';
 $string['avgprogress'] = 'Ø Fortschritt';
 $string['avggrade'] = 'Ø Bewertung';
-$string['completedcount'] = 'Abgeschlossen';
+$string['courseprogress'] = 'Kursfortschritt';
+$string['completed_of'] = '{$a->done} von {$a->total} abgeschlossen';
+$string['grade_chip'] = 'Bewertung {$a}';
+$string['avggrade_chip'] = 'Ø Bewertung {$a}';
+$string['distribution'] = '{$a->completed} abgeschlossen, {$a->inprogress} in Arbeit, {$a->notstarted} nicht begonnen';
+$string['n_completed'] = '{$a} abgeschlossen';
+$string['n_inprogress'] = '{$a} in Arbeit';
+$string['n_notstarted'] = '{$a} nicht begonnen';
+$string['histogram'] = 'Lernende nach Fortschritt';
