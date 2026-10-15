@@ -28,8 +28,9 @@ use templatable;
 
 /**
  * What the block shows on a course page: the learner's standing in every
- * Tarsus activity they can open, where to continue, and — for teachers —
- * how the course is doing per activity.
+ * Tarsus activity they can open and where to continue; for teachers, who
+ * earn no progress of their own, how the course is doing per activity
+ * instead.
  *
  * Everything comes from Moodle's own tables (the figures the activity
  * stores, the gradebook, completion); the block never calls the brain.
@@ -104,6 +105,11 @@ class overview implements renderable, templatable {
         $done = 0;
         foreach ($this->activities() as $cm) {
             $activity = $DB->get_record('tarsuszero', ['id' => $cm->instance], '*', MUST_EXIST);
+            if ($teacher) {
+                // Teachers earn no progress of their own: the summary is all they get.
+                $summary[] = $this->summary_row($activity, $cm, $completion);
+                continue;
+            }
             $figures = scoring::row((int) $activity->id, $this->userid);
             $progress = scoring::progress($activity, $figures);
             $grade = scoring::grade($activity, $figures);
@@ -145,9 +151,6 @@ class overview implements renderable, templatable {
                 }
             }
 
-            if ($teacher) {
-                $summary[] = $this->summary_row($activity, $cm, $completion);
-            }
         }
 
         $average = $rows ? $sum / count($rows) : 0.0;

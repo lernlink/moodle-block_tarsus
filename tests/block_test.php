@@ -140,7 +140,7 @@ final class block_test extends \advanced_testcase {
     }
 
     /**
-     * A teacher gets the course summary beneath their own standing.
+     * A teacher gets the course summary, and nothing else.
      */
     public function test_teacher_sees_summary(): void {
         $this->resetAfterTest(true);
@@ -153,6 +153,10 @@ final class block_test extends \advanced_testcase {
         $content = $this->block_for($data['course'], $data['teacher'])->get_content();
 
         $this->assertStringContainsString(get_string('coursesummary', 'block_tarsus'), $content->text);
+        // No learner elements: teachers earn no progress of their own.
+        $this->assertStringNotContainsString('block_tarsus__continue', $content->text);
+        $this->assertStringNotContainsString(get_string('courseprogress', 'block_tarsus'), $content->text);
+        $this->assertStringNotContainsString('block_tarsus__activity', $content->text);
         $this->assertStringContainsString(get_string('n_completed', 'block_tarsus', 1), $content->text);
         $this->assertStringContainsString(get_string('n_inprogress', 'block_tarsus', 0), $content->text);
         $this->assertStringContainsString(get_string('n_notstarted', 'block_tarsus', 0), $content->text);

@@ -17,8 +17,9 @@
 {{!
     @template block_tarsus/overview
 
-    The block's content: the learner's standing in the course and per Tarsus
-    activity, a "continue" link, and the teacher's per-activity summary.
+    The block's content: for a learner their standing in the course and per
+    Tarsus activity with a "continue" link; for a teacher (viewsummary) the
+    per-activity course summary instead, since teachers earn no progress.
 
     Context variables required for this template:
     * course - {progress, ringoffset, size, ringlabel, done, total}.
@@ -30,6 +31,7 @@
       buckets: [{label, count, height}]}.
 }}
 <div class="block_tarsus__overview">
+    {{^isteacher}}
     {{#course}}
     <div class="block_tarsus__course d-flex align-items-center mb-3">
         {{> block_tarsus/ring }}
@@ -66,8 +68,9 @@
         </li>
         {{/activities}}
     </ul>
+    {{/isteacher}}
     {{#isteacher}}
-    <h6 class="mt-3 mb-2">{{#str}}coursesummary, block_tarsus{{/str}}</h6>
+    <h6 class="mb-2">{{#str}}coursesummary, block_tarsus{{/str}}</h6>
     <ul class="list-unstyled mb-0 block_tarsus__summary">
         {{#summary}}
         <li class="mb-3">
