@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'block_tarsus';
-$plugin->version   = 2026102000;
+$plugin->version   = 2026102001;
 $plugin->requires  = 2025041400; // Moodle 5.0+ (target platform: Moodle 5.2).
 $plugin->maturity  = MATURITY_ALPHA;
 $plugin->release   = '0.4.0 (Card design)';
