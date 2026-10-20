@@ -2,9 +2,8 @@
 
    The same material as the activity's screens, so the block reads as one
    piece with them: the activity's ink (#1d2125) and muted grey (#50555c),
-   its 16px cards with a hairline and the soft violet shadow, the gradient
-   frame technique of its welcome and practice cards (an 8px gradient
-   padding around a white 13px body), its 24px chips with 6px corners,
+   the 16px cards with a hairline and the soft violet shadow of its chat
+   (Ask a question) cards, its 24px chips with 6px corners,
    its blue accent (#2f6fb1) for rings and buttons, its progress-bar
    gradient for XP and its verdict green for LU. Large numerals and quiet
    labels keep the Apple-like hierarchy. The activity paints fixed light
@@ -23,10 +22,7 @@
     --bt-green: #57b87b;
     --bt-green-soft: #e9f7ec;
     --bt-progress: linear-gradient(90deg, #2563eb 0%, #60a5fa 100%);
-    --bt-frame-learner: linear-gradient(135deg, #b39ddb 0%, #d8a7e8 35%, #f8b5c1 70%, #ffd9a0 100%);
-    --bt-frame-teacher: linear-gradient(135deg, #9cc6dc 0%, #aedfd8 35%, #d8f0ec 70%, #a3c3e4 100%);
     --bt-shadow: 0 4px 16px rgba(35, 23, 90, 0.06);
-    --bt-shadow-frame: 0 10px 28px rgba(35, 23, 90, 0.12);
     color: var(--bt-fg);
     font-variant-numeric: tabular-nums;
 }
@@ -167,9 +163,8 @@
     min-width: 0;
 }
 
-/* The list of cards: the activity's gradient frame (8px) around a white
-   13px body; learners' cards in the welcome card's lilac-peach, the
-   teacher's in the practice card's blue-green. */
+/* The list of cards: the chat card of Ask a question — a white 16px
+   card with a hairline and the soft violet shadow, no gradient frame. */
 .block_tarsus .block_tarsus__list {
     display: flex;
     flex-direction: column;
@@ -184,35 +179,21 @@
     align-items: flex-start;
     gap: 12px;
     padding: 14px;
-    border-radius: 13px;
+    border: 1px solid var(--bt-line);
+    border-radius: 16px;
     background: var(--bt-card);
+    box-shadow: var(--bt-shadow);
     color: var(--bt-fg);
     text-decoration: none;
-}
-
-.block_tarsus .block_tarsus__list > li {
-    padding: 8px;
-    border-radius: 16px;
-    background: var(--bt-frame-learner);
-    box-shadow: var(--bt-shadow-frame);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.block_tarsus .block_tarsus__list--teacher > li {
-    background: var(--bt-frame-teacher);
-    box-shadow: 0 10px 28px rgba(24, 74, 90, 0.1);
-}
-
-.block_tarsus .block_tarsus__list > li:has(a.block_tarsus__item:hover),
-.block_tarsus .block_tarsus__list > li:has(a.block_tarsus__item:focus-visible) {
-    transform: translateY(-1px);
-    box-shadow: 0 14px 32px rgba(35, 23, 90, 0.18);
 }
 
 .block_tarsus a.block_tarsus__item:hover,
 .block_tarsus a.block_tarsus__item:focus-visible {
     color: var(--bt-fg);
     text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(35, 23, 90, 0.12);
 }
 
 .block_tarsus .block_tarsus__body {
@@ -452,7 +433,7 @@
 
 @media (prefers-reduced-motion: reduce) {
     .block_tarsus .block_tarsus__continue,
-    .block_tarsus .block_tarsus__list > li,
+    .block_tarsus .block_tarsus__item,
     .block_tarsus .block_tarsus__ring-fill {
         transition: none;
     }
