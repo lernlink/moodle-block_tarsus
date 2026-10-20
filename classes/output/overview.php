@@ -44,9 +44,6 @@ class overview implements renderable, templatable {
     /** @var float Circumference of the ring's circle (r=9 in a 24 viewBox), as in the stack card. */
     public const RING = 56.55;
 
-    /** @var int Up to this many units a bar is drawn as one segment per unit. */
-    public const MAX_SEGMENTS = 20;
-
     /** @var int The course. */
     private int $courseid;
 
@@ -155,6 +152,7 @@ class overview implements renderable, templatable {
 
         $average = $rows ? $sum / count($rows) : 0.0;
         return [
+            'students' => $teacher ? count($this->students()) : 0,
             'course' => [
                 'progress' => (int) round($average),
                 'ringoffset' => self::ring_offset($average),
@@ -183,33 +181,21 @@ class overview implements renderable, templatable {
     }
 
     /**
-     * A bar for earned-of-total figures: one segment per unit while the
-     * total is small, a plain percentage bar otherwise.
+     * A bar for earned-of-total figures.
      *
      * @param float  $earned
      * @param float  $total
      * @param string $kind "test" or "build"; colours the bar.
      * @param string $unit The unit's label (XP, LU).
-     * @return array{kind: string, unit: string, earned: string, total: string, percent: int, segmented: bool, segments: array}
+     * @return array{kind: string, unit: string, earned: string, total: string, percent: int}
      */
     public static function bar(float $earned, float $total, string $kind, string $unit): array {
-        $percent = $total > 0 ? (int) round(min(100.0, max(0.0, $earned / $total * 100))) : 0;
-        $segmented = $total > 0 && $total <= self::MAX_SEGMENTS && abs($total - round($total)) < 0.001;
-        $segments = [];
-        if ($segmented) {
-            $filled = (int) round($earned);
-            for ($i = 1; $i <= (int) round($total); $i++) {
-                $segments[] = ['filled' => $i <= $filled];
-            }
-        }
         return [
             'kind' => $kind,
             'unit' => $unit,
             'earned' => self::figure($earned),
             'total' => self::figure($total),
-            'percent' => $percent,
-            'segmented' => $segmented,
-            'segments' => $segments,
+            'percent' => $total > 0 ? (int) round(min(100.0, max(0.0, $earned / $total * 100))) : 0,
         ];
     }
 

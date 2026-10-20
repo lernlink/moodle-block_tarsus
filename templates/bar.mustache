@@ -17,25 +17,16 @@
 {{!
     @template block_tarsus/bar
 
-    An earned-of-total bar: one segment per unit while the total is small,
-    a plain bar otherwise. The figures follow on the right.
+    An earned-of-total bar with its figures on the right.
 
     Context variables required for this template:
     * kind - string, "test" or "build" (colours the bar).
     * unit - string, the unit's label (XP, LU).
     * earned, total - strings, the figures.
     * percent - number, 0..100.
-    * segmented - bool; segments - array of {filled}.
 }}
 <div class="block_tarsus__bar block_tarsus__bar--{{kind}}" role="progressbar" aria-valuemin="0" aria-valuemax="100"
      aria-valuenow="{{percent}}" aria-label="{{unit}} {{earned}} / {{total}}">
-    {{#segmented}}
-    <span class="block_tarsus__segments">
-        {{#segments}}<span class="block_tarsus__segment{{#filled}} block_tarsus__segment--filled{{/filled}}"></span>{{/segments}}
-    </span>
-    {{/segmented}}
-    {{^segmented}}
-    <span class="block_tarsus__segments block_tarsus__segments--plain"><span class="block_tarsus__segment block_tarsus__segment--filled" style="width: {{percent}}%"></span></span>
-    {{/segmented}}
+    <span class="block_tarsus__track"><span class="block_tarsus__fill" style="width: {{percent}}%"></span></span>
     <span class="block_tarsus__bar-figures">{{earned}} / {{total}} {{unit}}</span>
 </div>

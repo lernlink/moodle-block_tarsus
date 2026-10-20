@@ -1,12 +1,85 @@
 /* The Tarsus Lerncoach block.
 
-   Rings, segmented bars and chips follow the drawing on the Build
-   knowledge stack card (faint track, round-capped stroke, chips on a
-   translucent pad). Colours come from the theme's variables so Boost's
-   dark mode works. */
+   Grouped, inset cards with hairline borders and soft shadows, large
+   numerals, quiet secondary labels and one blue accent, in the manner of
+   Apple's system apps. Every colour is a token on the block, defaulting
+   to the theme's own variables so Boost's dark mode works; the accent
+   blue and the two bar greens are the block's own. */
+.block_tarsus {
+    --bt-fg: var(--bs-body-color, #1d2125);
+    --bt-muted: var(--bs-secondary-color, #6b7280);
+    --bt-card: var(--bs-body-bg, #fff);
+    /* Hairlines and tracks are translucent ink, so they read on the
+       theme's card colour in light and dark mode alike (the theme's own
+       tertiary background is too close to white to serve as a track). */
+    --bt-line: rgba(60, 70, 90, 0.14);
+    --bt-track: rgba(60, 70, 90, 0.12);
+    --bt-accent: #3b82f6;
+    --bt-accent-deep: #2563eb;
+    --bt-accent-soft: rgba(59, 130, 246, 0.12);
+    --bt-green: #34c759;
+    --bt-green-soft: rgba(52, 199, 89, 0.14);
+    --bt-radius: 14px;
+    --bt-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 24px rgba(16, 24, 40, 0.06);
+    font-variant-numeric: tabular-nums;
+}
 
-/* Progress ring: the SVG scales from the 24-unit viewBox used in the
-   stack card, so the dash geometry (r=9, circumference 56.55) stays. */
+.block_tarsus .block_tarsus__overview {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* The hero: the ring (or an icon) and two lines of text, a hairline
+   between them. */
+.block_tarsus .block_tarsus__hero {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 6px 2px;
+}
+
+.block_tarsus .block_tarsus__hero-text {
+    min-width: 0;
+    padding-left: 16px;
+    border-left: 1px solid var(--bt-line);
+}
+
+.block_tarsus .block_tarsus__eyebrow {
+    font-size: 0.8rem;
+    color: var(--bt-muted);
+}
+
+.block_tarsus .block_tarsus__headline {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--bt-fg);
+    text-wrap: balance;
+}
+
+.block_tarsus .block_tarsus__hero-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--bt-accent-soft);
+    color: var(--bt-accent-deep);
+    font-size: 1.25rem;
+}
+
+.block_tarsus .block_tarsus__hero-icon .icon {
+    margin: 0;
+    width: auto;
+    height: auto;
+}
+
+/* Progress ring: the same drawing as on the learning-unit card, scaled
+   from its 24-unit viewBox; the stroke is a fifth of the size. */
 .block_tarsus .block_tarsus__ring {
     position: relative;
     display: inline-flex;
@@ -26,15 +99,15 @@
 .block_tarsus .block_tarsus__ring-track,
 .block_tarsus .block_tarsus__ring-fill {
     fill: none;
-    stroke-width: 3;
+    stroke-width: 2.6;
 }
 
 .block_tarsus .block_tarsus__ring-track {
-    stroke: var(--bs-border-color, rgba(0, 0, 0, 0.1));
+    stroke: var(--bt-track);
 }
 
 .block_tarsus .block_tarsus__ring-fill {
-    stroke: var(--bs-body-color, #23282d);
+    stroke: var(--bt-accent);
     stroke-linecap: round;
     stroke-dasharray: 56.55;
     transition: stroke-dashoffset 0.3s ease;
@@ -42,137 +115,263 @@
 
 .block_tarsus .block_tarsus__ring-value {
     position: relative;
-    font-size: calc(var(--block-tarsus-ring, 36px) * 0.26);
+    font-size: calc(var(--block-tarsus-ring, 36px) * 0.27);
     font-weight: 600;
+    letter-spacing: -0.02em;
     line-height: 1;
+    color: var(--bt-fg);
 }
 
-.block_tarsus .block_tarsus__body {
+/* The continue button: a blue gradient pill with the book and a chevron. */
+.block_tarsus .block_tarsus__continue {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: var(--bt-radius);
+    background: linear-gradient(135deg, var(--bt-accent) 0%, var(--bt-accent-deep) 100%);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.28);
+    color: #fff;
+    font-weight: 500;
+    line-height: 1.3;
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.block_tarsus .block_tarsus__continue:hover,
+.block_tarsus .block_tarsus__continue:focus-visible {
+    color: #fff;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.34);
+}
+
+.block_tarsus .block_tarsus__continue .icon {
+    margin: 0;
+    width: auto;
+    height: auto;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.block_tarsus .block_tarsus__continue-text {
+    flex-grow: 1;
     min-width: 0;
 }
 
-.block_tarsus .block_tarsus__name {
-    display: block;
-    line-height: 1.25;
-    margin-bottom: 0.25rem;
+/* The list of cards. */
+.block_tarsus .block_tarsus__list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
-/* Earned-of-total bar: one segment per unit, or a plain bar. */
+.block_tarsus .block_tarsus__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid var(--bt-line);
+    border-radius: var(--bt-radius);
+    background: var(--bt-card);
+    box-shadow: var(--bt-shadow);
+    color: var(--bt-fg);
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.block_tarsus a.block_tarsus__item:hover,
+.block_tarsus a.block_tarsus__item:focus-visible {
+    color: var(--bt-fg);
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(16, 24, 40, 0.05), 0 12px 28px rgba(16, 24, 40, 0.1);
+}
+
+.block_tarsus .block_tarsus__body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.block_tarsus .block_tarsus__title {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--bt-fg);
+}
+
+.block_tarsus .block_tarsus__title--link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.block_tarsus .block_tarsus__title--link:hover {
+    color: var(--bt-accent-deep);
+    text-decoration: none;
+}
+
+.block_tarsus .block_tarsus__chevron {
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 3px;
+    color: var(--bt-muted);
+    font-size: 0.8rem;
+}
+
+.block_tarsus .block_tarsus__title--link .block_tarsus__chevron {
+    align-self: center;
+    margin-top: 0;
+}
+
+.block_tarsus .block_tarsus__chevron .icon,
+.block_tarsus .block_tarsus__chip .icon {
+    margin: 0;
+    width: auto;
+    height: auto;
+}
+
+.block_tarsus .block_tarsus__note {
+    font-size: 0.85rem;
+    color: var(--bt-muted);
+}
+
+/* Earned-of-total bars: a rounded track, the fill in the mode's colour
+   (Test knowledge blue, Build knowledge green), figures on the right. */
 .block_tarsus .block_tarsus__bar {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.25rem;
+    gap: 10px;
 }
 
-.block_tarsus .block_tarsus__segments {
-    display: flex;
+.block_tarsus .block_tarsus__track {
+    display: block;
     flex-grow: 1;
-    gap: 2px;
-    height: 6px;
+    height: 8px;
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--bt-track);
 }
 
-.block_tarsus .block_tarsus__segment {
-    flex: 1 1 0;
-    border-radius: 3px;
-    background: var(--bs-border-color, rgba(0, 0, 0, 0.1));
+.block_tarsus .block_tarsus__fill {
+    display: block;
+    height: 100%;
+    min-width: 8px;
+    border-radius: 4px;
+    background: var(--bt-accent);
 }
 
-.block_tarsus .block_tarsus__segments--plain {
-    gap: 0;
-    border-radius: 3px;
-    background: var(--bs-border-color, rgba(0, 0, 0, 0.1));
-}
-
-.block_tarsus .block_tarsus__segments--plain .block_tarsus__segment {
-    flex: none;
-}
-
-.block_tarsus .block_tarsus__bar--test .block_tarsus__segment--filled {
-    background: var(--bs-primary, #0f6cbf);
-}
-
-.block_tarsus .block_tarsus__bar--build .block_tarsus__segment--filled {
-    background: var(--bs-success, #57b87b);
+.block_tarsus .block_tarsus__bar--build .block_tarsus__fill {
+    background: var(--bt-green);
 }
 
 .block_tarsus .block_tarsus__bar-figures {
     flex-shrink: 0;
-    min-width: 4.5em;
+    min-width: 5em;
     text-align: right;
-    font-size: 0.75rem;
-    color: var(--bs-secondary-color, #50555c);
+    font-size: 0.8rem;
+    color: var(--bt-muted);
+    white-space: nowrap;
 }
 
-/* Chips on a translucent pad, like the band chips on the cards. */
+/* Chips. */
 .block_tarsus .block_tarsus__chips {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.25rem;
-    margin-top: 0.25rem;
+    gap: 6px;
 }
 
 .block_tarsus .block_tarsus__chip {
     display: inline-flex;
     align-items: center;
-    height: 22px;
-    padding: 0 0.5rem;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    background: var(--bs-secondary-bg, rgba(0, 0, 0, 0.05));
-    color: var(--bs-body-color, #1d2125);
+    gap: 6px;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 9px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: rgba(60, 70, 90, 0.08);
+    color: var(--bt-fg);
+}
+
+.block_tarsus .block_tarsus__chip--accent {
+    background: var(--bt-accent-soft);
+    color: var(--bt-accent-deep);
 }
 
 .block_tarsus .block_tarsus__chip--done {
-    background: var(--bs-success-bg-subtle, #e9f7ec);
-    color: var(--bs-success-text-emphasis, #1d2125);
+    background: var(--bt-green-soft);
+    color: #1f7a3a;
 }
 
-/* Teacher: a stacked bar of completed / in progress / not started. */
+.block_tarsus .block_tarsus__chip--end {
+    margin-left: auto;
+}
+
+/* Teacher: the stacked bar of completed / in progress / not started. */
 .block_tarsus .block_tarsus__stack {
     display: flex;
+    gap: 2px;
     height: 8px;
     overflow: hidden;
     border-radius: 4px;
-    background: var(--bs-border-color, rgba(0, 0, 0, 0.1));
+    background: var(--bt-track);
 }
 
 .block_tarsus .block_tarsus__stack-part--done,
 .block_tarsus .block_tarsus__dot--done {
-    background: var(--bs-success, #57b87b);
+    background: var(--bt-green);
 }
 
 .block_tarsus .block_tarsus__stack-part--open,
 .block_tarsus .block_tarsus__dot--open {
-    background: var(--bs-primary, #0f6cbf);
+    background: var(--bt-accent);
 }
 
 .block_tarsus .block_tarsus__stack-part--none,
 .block_tarsus .block_tarsus__dot--none {
-    background: var(--bs-border-color, rgba(0, 0, 0, 0.1));
+    background: var(--bt-track);
 }
 
 .block_tarsus .block_tarsus__legend {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.125rem 0.75rem;
+    gap: 2px 12px;
+    font-size: 0.8rem;
+    color: var(--bt-muted);
 }
 
 .block_tarsus .block_tarsus__dot {
     display: inline-block;
     width: 8px;
     height: 8px;
-    margin-right: 0.25rem;
+    margin-right: 5px;
     border-radius: 50%;
     vertical-align: middle;
 }
 
-/* Teacher: a four-bucket histogram of learners' progress. */
+.block_tarsus .block_tarsus__row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Teacher: a four-bucket histogram of learners by progress. */
 .block_tarsus .block_tarsus__histogram {
     display: flex;
     align-items: flex-end;
-    gap: 0.5rem;
-    height: 64px;
+    gap: 8px;
+    height: 68px;
+    padding-top: 4px;
 }
 
 .block_tarsus .block_tarsus__bucket {
@@ -187,7 +386,7 @@
 .block_tarsus .block_tarsus__bucket-count {
     font-size: 0.7rem;
     line-height: 1;
-    color: var(--bs-secondary-color, #50555c);
+    color: var(--bt-muted);
 }
 
 .block_tarsus .block_tarsus__bucket-bar {
@@ -195,21 +394,30 @@
     align-items: flex-end;
     flex-grow: 1;
     width: 100%;
-    margin: 2px 0;
-    border-radius: 3px;
-    background: var(--bs-border-color, rgba(0, 0, 0, 0.1));
+    margin: 3px 0;
+    border-radius: 5px;
+    /* Lighter than a bar track: an empty bucket is a quiet column. */
+    background: rgba(60, 70, 90, 0.06);
 }
 
 .block_tarsus .block_tarsus__bucket-fill {
     width: 100%;
-    min-height: 2px;
-    border-radius: 3px;
-    background: var(--bs-primary, #0f6cbf);
+    min-height: 3px;
+    border-radius: 5px;
+    background: linear-gradient(180deg, var(--bt-accent) 0%, var(--bt-accent-deep) 100%);
 }
 
 .block_tarsus .block_tarsus__bucket-label {
     font-size: 0.65rem;
     line-height: 1;
     white-space: nowrap;
-    color: var(--bs-secondary-color, #50555c);
+    color: var(--bt-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .block_tarsus .block_tarsus__continue,
+    .block_tarsus .block_tarsus__item,
+    .block_tarsus .block_tarsus__ring-fill {
+        transition: none;
+    }
 }

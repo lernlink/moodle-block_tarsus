@@ -50,3 +50,4 @@ $string['n_completed'] = '{$a} completed';
 $string['n_inprogress'] = '{$a} in progress';
 $string['n_notstarted'] = '{$a} not started';
 $string['histogram'] = 'Learners by progress';
+$string['n_learners'] = '{$a} learners';

@@ -100,7 +100,8 @@ final class block_test extends \advanced_testcase {
         $this->assertStringContainsString('70%', $content->text);
         $this->assertStringContainsString('3 / 9 ' . get_string('xp', 'block_tarsus'), $content->text);
         $this->assertStringContainsString('9 / 9 ' . get_string('lu', 'block_tarsus'), $content->text);
-        $this->assertSame(12, substr_count($content->text, 'block_tarsus__segment block_tarsus__segment--filled'));
+        $this->assertStringContainsString('style="width: 33%"', $content->text);
+        $this->assertStringContainsString('style="width: 100%"', $content->text);
         $this->assertStringContainsString(get_string('grade_chip', 'block_tarsus', 67), $content->text);
         $this->assertStringContainsString(get_string('completed', 'block_tarsus'), $content->text);
         $this->assertStringContainsString(get_string('completed_of', 'block_tarsus', (object) ['done' => 1, 'total' => 1]),
@@ -153,6 +154,7 @@ final class block_test extends \advanced_testcase {
         $content = $this->block_for($data['course'], $data['teacher'])->get_content();
 
         $this->assertStringContainsString(get_string('coursesummary', 'block_tarsus'), $content->text);
+        $this->assertStringContainsString(get_string('n_learners', 'block_tarsus', 1), $content->text);
         // No learner elements: teachers earn no progress of their own.
         $this->assertStringNotContainsString('block_tarsus__continue', $content->text);
         $this->assertStringNotContainsString(get_string('courseprogress', 'block_tarsus'), $content->text);
@@ -208,14 +210,13 @@ final class block_test extends \advanced_testcase {
         $this->assertSame('28.28', \block_tarsus\output\overview::ring_offset(50));
 
         $bar = \block_tarsus\output\overview::bar(2.5, 4, 'test', 'XP');
-        $this->assertTrue($bar['segmented']);
         $this->assertSame('2.5', $bar['earned']);
+        $this->assertSame('4', $bar['total']);
         $this->assertSame(63, $bar['percent']);
-        $this->assertSame([true, true, true, false], array_column($bar['segments'], 'filled'));
 
         $bar = \block_tarsus\output\overview::bar(30, 36, 'build', 'LU');
-        $this->assertFalse($bar['segmented']);
         $this->assertSame(83, $bar['percent']);
+        $this->assertSame(0, \block_tarsus\output\overview::bar(1, 0, 'test', 'XP')['percent']);
     }
 
     /**
