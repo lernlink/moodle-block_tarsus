@@ -6,8 +6,10 @@
    (Ask a question) cards, its 24px chips with 6px corners,
    its blue accent (#2f6fb1) for rings and buttons, its progress-bar
    gradient for XP and its verdict green for LU. Large numerals and quiet
-   labels keep the Apple-like hierarchy. The activity paints fixed light
-   bodies, so the block does too. */
+   labels keep the Apple-like hierarchy. The activity paints its own
+   light and dark surfaces, so the block carries the same two palettes:
+   the dark one is keyed off the data-bs-theme attribute Boost 5.3 sets
+   on <html> for its colour modes; older sites never set it. */
 .block_tarsus {
     --bt-fg: #1d2125;
     --bt-muted: #50555c;
@@ -15,16 +17,40 @@
     --bt-card: #fff;
     --bt-line: rgba(0, 0, 0, 0.08);
     --bt-track: #e6e9ef;
+    --bt-track-soft: #f4f4f2;
+    --bt-ring-track: rgba(0, 0, 0, 0.1);
     --bt-pad: #efeff0;
     --bt-accent: #2f6fb1;
     --bt-accent-deep: #275f99;
     --bt-accent-soft: rgba(47, 111, 177, 0.12);
+    --bt-accent-text: #2f6fb1;
     --bt-green: #57b87b;
     --bt-green-soft: #e9f7ec;
     --bt-progress: linear-gradient(90deg, #2563eb 0%, #60a5fa 100%);
     --bt-shadow: 0 4px 16px rgba(35, 23, 90, 0.06);
+    --bt-shadow-hover: 0 8px 24px rgba(35, 23, 90, 0.12);
     color: var(--bt-fg);
     font-variant-numeric: tabular-nums;
+}
+
+/* Dark mode: the activity's dark palette — Boost's raised surface for
+   the cards, its greys for text, translucent white hairlines and pads,
+   the accent lifted a step where it is text or a stroke. */
+[data-bs-theme="dark"] .block_tarsus {
+    --bt-fg: #dee2e6;
+    --bt-muted: #afb5bc;
+    --bt-ink: #e9ecef;
+    --bt-card: #343a40;
+    --bt-line: rgba(255, 255, 255, 0.12);
+    --bt-track: #495057;
+    --bt-track-soft: #3d444b;
+    --bt-ring-track: rgba(255, 255, 255, 0.18);
+    --bt-pad: rgba(255, 255, 255, 0.1);
+    --bt-accent-soft: rgba(91, 155, 224, 0.2);
+    --bt-accent-text: #7fb0e3;
+    --bt-green-soft: #243d2e;
+    --bt-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    --bt-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 .block_tarsus .block_tarsus__overview {
@@ -106,7 +132,7 @@
 }
 
 .block_tarsus .block_tarsus__ring-track {
-    stroke: rgba(0, 0, 0, 0.1);
+    stroke: var(--bt-ring-track);
 }
 
 .block_tarsus .block_tarsus__ring-fill {
@@ -193,7 +219,7 @@
     color: var(--bt-fg);
     text-decoration: none;
     transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(35, 23, 90, 0.12);
+    box-shadow: var(--bt-shadow-hover);
 }
 
 .block_tarsus .block_tarsus__body {
@@ -221,7 +247,7 @@
 }
 
 .block_tarsus .block_tarsus__title--link:hover {
-    color: var(--bt-accent);
+    color: var(--bt-accent-text);
     text-decoration: none;
 }
 
@@ -312,7 +338,7 @@
 
 .block_tarsus .block_tarsus__chip--accent {
     background: var(--bt-accent-soft);
-    color: var(--bt-accent);
+    color: var(--bt-accent-text);
 }
 
 .block_tarsus .block_tarsus__chip--done {
@@ -414,7 +440,7 @@
     width: 100%;
     margin: 3px 0;
     border-radius: 5px;
-    background: #f4f4f2;
+    background: var(--bt-track-soft);
 }
 
 .block_tarsus .block_tarsus__bucket-fill {
