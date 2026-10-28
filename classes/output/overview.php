@@ -19,8 +19,8 @@ namespace block_tarsus\output;
 
 use completion_info;
 use context_course;
-use mod_tarsuszero\local\didactics;
-use mod_tarsuszero\local\scoring;
+use mod_tarsus\local\didactics;
+use mod_tarsus\local\scoring;
 use moodle_url;
 use renderable;
 use renderer_base;
@@ -69,7 +69,7 @@ class overview implements renderable, templatable {
     public function activities(): array {
         $modinfo = get_fast_modinfo($this->courseid, $this->userid);
         $cms = [];
-        foreach ($modinfo->get_instances_of('tarsuszero') as $cm) {
+        foreach ($modinfo->get_instances_of('tarsus') as $cm) {
             if ($cm->uservisible && $cm->deletioninprogress == 0) {
                 $cms[] = $cm;
             }
@@ -101,7 +101,7 @@ class overview implements renderable, templatable {
         $sum = 0.0;
         $done = 0;
         foreach ($this->activities() as $cm) {
-            $activity = $DB->get_record('tarsuszero', ['id' => $cm->instance], '*', MUST_EXIST);
+            $activity = $DB->get_record('tarsus', ['id' => $cm->instance], '*', MUST_EXIST);
             if ($teacher) {
                 // Teachers earn no progress of their own: the summary is all they get.
                 $summary[] = $this->summary_row($activity, $cm, $completion);
@@ -116,7 +116,7 @@ class overview implements renderable, templatable {
                 : $progress >= 100;
             $hastest = didactics::mode_enabled($activity, 'test');
             $hasbuild = didactics::mode_enabled($activity, 'build');
-            $url = (new moodle_url('/mod/tarsuszero/view.php', ['id' => $cm->id]))->out(false);
+            $url = (new moodle_url('/mod/tarsus/view.php', ['id' => $cm->id]))->out(false);
 
             $rows[] = [
                 'name' => format_string($cm->name),
@@ -246,7 +246,7 @@ class overview implements renderable, templatable {
     /**
      * The teacher's figures for one activity.
      *
-     * @param \stdClass       $activity   The tarsuszero record.
+     * @param \stdClass       $activity   The tarsus record.
      * @param \cm_info        $cm         Its course module.
      * @param completion_info $completion The course's completion.
      * @return array<string, mixed>
@@ -257,7 +257,7 @@ class overview implements renderable, templatable {
         // Only students count; teachers trying the activity do not skew the figures.
         $students = array_flip($this->students());
         $figures = [];
-        foreach ($DB->get_records('tarsuszero_progress', ['tarsuszeroid' => $activity->id]) as $row) {
+        foreach ($DB->get_records('tarsus_progress', ['tarsusid' => $activity->id]) as $row) {
             if (isset($students[(int) $row->userid])) {
                 $figures[(int) $row->userid] = $row;
             }
@@ -306,7 +306,7 @@ class overview implements renderable, templatable {
 
         return [
             'name' => format_string($cm->name),
-            'url' => (new moodle_url('/mod/tarsuszero/view.php', ['id' => $cm->id]))->out(false),
+            'url' => (new moodle_url('/mod/tarsus/view.php', ['id' => $cm->id]))->out(false),
             'total' => $total,
             'completed' => $completed,
             'inprogress' => $inprogress,

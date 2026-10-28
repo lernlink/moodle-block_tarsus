@@ -17,7 +17,7 @@
 
 namespace block_tarsus;
 
-use mod_tarsuszero\local\scoring;
+use mod_tarsus\local\scoring;
 
 /**
  * The block's content on a course page.
@@ -59,13 +59,13 @@ final class block_test extends \advanced_testcase {
     private function setup_course(): array {
         global $DB;
         $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
-        $tz = $this->getDataGenerator()->create_module('tarsuszero', ['course' => $course->id,
+        $tz = $this->getDataGenerator()->create_module('tarsus', ['course' => $course->id,
             'completion' => COMPLETION_TRACKING_AUTOMATIC, 'completionprogress' => 50]);
         $student = $this->getDataGenerator()->create_user();
         $teacher = $this->getDataGenerator()->create_user();
         $this->getDataGenerator()->enrol_user($student->id, $course->id, 'student');
         $this->getDataGenerator()->enrol_user($teacher->id, $course->id, 'editingteacher');
-        return ['course' => $course, 'tz' => $tz, 'activity' => $DB->get_record('tarsuszero', ['id' => $tz->id]),
+        return ['course' => $course, 'tz' => $tz, 'activity' => $DB->get_record('tarsus', ['id' => $tz->id]),
             'student' => $student, 'teacher' => $teacher];
     }
 

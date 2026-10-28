@@ -10,9 +10,9 @@ Shows, on a course page with at least one Tarsus activity the viewer can open:
   a per-activity course summary: learners started, average progress, average
   grade, completions.
 
-All figures come from `tarsuszero_progress`, the gradebook and completion;
+All figures come from `tarsus_progress`, the gradebook and completion;
 the block never calls the brain. It stays empty (hidden) in a course without
-a visible Tarsus activity. Depends on `local_tarsus` and `mod_tarsuszero`.
+a visible Tarsus activity. Depends on `local_tarsus` and `mod_tarsus`.
 
 - **Component:** `block_tarsus`
 - **Target:** Moodle 5.2 / 5.3 · PHP 8.3+
