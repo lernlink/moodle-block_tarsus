@@ -24,6 +24,14 @@
     * unit - string, the unit's label (XP, LU).
     * earned, total - strings, the figures.
     * percent - number, 0..100.
+    Example context (json):
+    {
+        "kind": "test",
+        "unit": "XP",
+        "earned": "12",
+        "total": "60",
+        "percent": 20
+    }
 }}
 <div class="block_tarsus__bar block_tarsus__bar--{{kind}}" role="progressbar" aria-valuemin="0" aria-valuemax="100"
      aria-valuenow="{{percent}}" aria-label="{{unit}} {{earned}} / {{total}}">

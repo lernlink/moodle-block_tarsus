@@ -29,6 +29,56 @@
     * isteacher, students, summary - array of {name, url, total, completed, inprogress, notstarted, completedpct,
       inprogresspct, notstartedpct, progress, ringoffset, size, ringlabel, hasgrades, avggrade, hashistogram,
       buckets: [{label, count, height}]}.
+    Example context (json):
+    {
+        "course": {
+            "progress": 40,
+            "ringoffset": "33.93",
+            "size": 64,
+            "ringlabel": "40 % complete",
+            "done": 1,
+            "total": 2
+        },
+        "activities": [
+            {
+                "name": "Transformer models",
+                "url": "https://example.org/mod/tarsus/view.php?id=12",
+                "progress": 55,
+                "ringoffset": "25.45",
+                "size": 40,
+                "ringlabel": "55 % complete",
+                "hasfigures": true,
+                "hastest": true,
+                "hasbuild": true,
+                "xp": {
+                    "kind": "test",
+                    "unit": "XP",
+                    "earned": "33",
+                    "total": "60",
+                    "percent": 55
+                },
+                "lu": {
+                    "kind": "build",
+                    "unit": "LU",
+                    "earned": "2",
+                    "total": "4",
+                    "percent": 50
+                },
+                "hasgrade": true,
+                "grade": "55.00",
+                "trackscompletion": true,
+                "completed": false
+            }
+        ],
+        "hascontinue": true,
+        "continue": {
+            "name": "Transformer models",
+            "url": "https://example.org/mod/tarsus/view.php?id=12"
+        },
+        "isteacher": false,
+        "students": 0,
+        "summary": []
+    }
 }}
 <div class="block_tarsus__overview">
     {{^isteacher}}

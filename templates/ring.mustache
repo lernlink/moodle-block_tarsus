@@ -27,6 +27,13 @@
     * progress - number, 0..100.
     * ringoffset - string, the stroke offset (see overview::ring_offset()).
     * ringlabel - string, the accessible name.
+    Example context (json):
+    {
+        "size": 48,
+        "progress": 35,
+        "ringoffset": "36.76",
+        "ringlabel": "35 % complete"
+    }
 }}
 <span class="block_tarsus__ring" style="--block-tarsus-ring: {{size}}px">
     <svg viewBox="0 0 24 24" width="{{size}}" height="{{size}}" role="img" aria-label="{{ringlabel}} {{progress}}%">

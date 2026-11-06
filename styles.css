@@ -85,7 +85,6 @@
     line-height: 1.2;
     letter-spacing: -0.01em;
     color: var(--bt-fg);
-    text-wrap: balance;
 }
 
 .block_tarsus .block_tarsus__hero-icon {
