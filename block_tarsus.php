@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * Tarsus Lerncoach course block.
@@ -22,21 +22,18 @@
  * local_tarsus client interface.
  *
  * @package    block_tarsus
- * @copyright  2026 lern.link GmbH
+ * @copyright  2026 lern.link GmbH | Vadym Nersesov <nersesov.vadim@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * The Tarsus Lerncoach block.
  *
  * @package    block_tarsus
- * @copyright  2026 lern.link GmbH
+ * @copyright  2026 lern.link GmbH | Vadym Nersesov <nersesov.vadim@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_tarsus extends block_base {
-
     /**
      * Initialise the block title.
      *
@@ -70,7 +67,9 @@ class block_tarsus extends block_base {
         }
         $renderer = $this->page->get_renderer('core');
         $this->content->text = $renderer->render_from_template(
-            'block_tarsus/overview', $overview->export_for_template($renderer));
+            'block_tarsus/overview',
+            $overview->export_for_template($renderer)
+        );
 
         return $this->content;
     }

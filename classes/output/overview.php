@@ -8,12 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
-
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace block_tarsus\output;
 
@@ -36,11 +35,10 @@ use templatable;
  * stores, the gradebook, completion); the block never calls the brain.
  *
  * @package    block_tarsus
- * @copyright  2026 lern.link GmbH
+ * @copyright  2026 lern.link GmbH | Vadym Nersesov <nersesov.vadim@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class overview implements renderable, templatable {
-
     /** @var float Circumference of the ring's circle (r=9 in a 24 viewBox), as in the stack card. */
     public const RING = 56.55;
 
@@ -128,10 +126,18 @@ class overview implements renderable, templatable {
                 'hasfigures' => $figures !== null,
                 'hastest' => $hastest,
                 'hasbuild' => $hasbuild,
-                'xp' => $figures ? self::bar((float) $figures->earnedxp, (float) $figures->totalxp, 'test',
-                    get_string('xp', 'block_tarsus')) : null,
-                'lu' => $figures ? self::bar((float) $figures->earnedunits, (float) $figures->totalunits, 'build',
-                    get_string('lu', 'block_tarsus')) : null,
+                'xp' => $figures ? self::bar(
+                    (float) $figures->earnedxp,
+                    (float) $figures->totalxp,
+                    'test',
+                    get_string('xp', 'block_tarsus')
+                ) : null,
+                'lu' => $figures ? self::bar(
+                    (float) $figures->earnedunits,
+                    (float) $figures->totalunits,
+                    'build',
+                    get_string('lu', 'block_tarsus')
+                ) : null,
                 'hasgrade' => $figures !== null && $grade !== null,
                 'grade' => $grade !== null ? (int) round($grade) : 0,
                 'trackscompletion' => $tracked,
@@ -147,7 +153,6 @@ class overview implements renderable, templatable {
                     $continue = ['name' => format_string($cm->name), 'url' => $url, 'touched' => $touched];
                 }
             }
-
         }
 
         $average = $rows ? $sum / count($rows) : 0.0;
@@ -267,10 +272,16 @@ class overview implements renderable, templatable {
         if ($tracked) {
             [$insql, $params] = $DB->get_in_or_equal([COMPLETION_COMPLETE, COMPLETION_COMPLETE_PASS], SQL_PARAMS_NAMED);
             $params['cmid'] = $cm->id;
-            $completedby = $DB->get_fieldset_select('course_modules_completion', 'userid',
-                "coursemoduleid = :cmid AND completionstate $insql", $params);
-            $completedby = array_values(array_filter(array_map('intval', $completedby),
-                fn(int $userid): bool => isset($students[$userid])));
+            $completedby = $DB->get_fieldset_select(
+                'course_modules_completion',
+                'userid',
+                "coursemoduleid = :cmid AND completionstate $insql",
+                $params
+            );
+            $completedby = array_values(array_filter(
+                array_map('intval', $completedby),
+                fn(int $userid): bool => isset($students[$userid])
+            ));
         }
 
         $progresses = [];

@@ -8,12 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
-
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace block_tarsus;
 
@@ -23,13 +22,12 @@ use mod_tarsus\local\scoring;
  * The block's content on a course page.
  *
  * @package    block_tarsus
- * @copyright  2026 lern.link GmbH
+ * @copyright  2026 lern.link GmbH | Vadym Nersesov <nersesov.vadim@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \block_tarsus
  * @covers     \block_tarsus\output\overview
  */
 final class block_test extends \advanced_testcase {
-
     /**
      * A block instance on a course page, as the given user.
      *
@@ -104,8 +102,10 @@ final class block_test extends \advanced_testcase {
         $this->assertStringContainsString('style="width: 100%"', $content->text);
         $this->assertStringContainsString(get_string('grade_chip', 'block_tarsus', 67), $content->text);
         $this->assertStringContainsString(get_string('completed', 'block_tarsus'), $content->text);
-        $this->assertStringContainsString(get_string('completed_of', 'block_tarsus', (object) ['done' => 1, 'total' => 1]),
-            $content->text);
+        $this->assertStringContainsString(
+            get_string('completed_of', 'block_tarsus', (object) ['done' => 1, 'total' => 1]),
+            $content->text
+        );
         $this->assertStringNotContainsString(get_string('coursesummary', 'block_tarsus'), $content->text);
     }
 

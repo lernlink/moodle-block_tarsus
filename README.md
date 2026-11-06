@@ -1,24 +1,59 @@
-# block_tarsus
+# Tarsus Lerncoach block for Moodle (block_tarsus)
 
-Course block plugin for the Tarsus ↔ Moodle integration (Lerncoach).
+A course block for the Tarsus AI learning coach. On a
+course page with at least one Tarsus activity the viewer can open, it shows:
 
-Shows, on a course page with at least one Tarsus activity the viewer can open:
-
-- the learner's standing per activity (progress, XP / LU, grade, completion);
+- the learner's standing per activity: progress, experience points, grade and
+  completion;
 - a "Continue in …" link to the most recently touched unfinished activity;
-- for holders of `block/tarsus:viewsummary` (teacher, editing teacher, manager)
-  a per-activity course summary: learners started, average progress, average
-  grade, completions.
+- for holders of `block/tarsus:viewsummary` (teachers and managers by
+  default) a per-activity course summary: learners started, average
+  progress, average grade, completions.
 
-All figures come from `tarsus_progress`, the gradebook and completion;
-the block never calls the brain. It stays empty (hidden) in a course without
-a visible Tarsus activity. Depends on `local_tarsus` and `mod_tarsus`.
+All figures come from the activity's progress table, the gradebook and
+activity completion; the block never calls the brain. It stays hidden in a
+course without a visible Tarsus activity. It follows the site's light or dark
+colour mode.
 
-- **Component:** `block_tarsus`
-- **Target:** Moodle 5.2 / 5.3 · PHP 8.3+
+Requires **local_tarsus** and **mod_tarsus**. See the local_tarsus README for
+the whole plugin set.
 
-See the project technical specification for full design details.
+## Requirements
+
+- Moodle 5.0 or later, tested on 5.2 and 5.3; PHP 8.2 or later.
+- local_tarsus and mod_tarsus installed.
+
+## Installation
+
+1. Install local_tarsus and mod_tarsus.
+2. Unzip into `blocks/tarsus` (Moodle 5.1+: `public/blocks/tarsus`), or add
+   the repository as a Git submodule at that path.
+3. Visit *Site administration › Notifications* to install.
+4. Turn editing on in a course and add the *Tarsus Lerncoach* block.
+
+## Capabilities
+
+| Capability | Default roles |
+|---|---|
+| `block/tarsus:addinstance` | Editing teacher, manager |
+| `block/tarsus:viewsummary` | Teacher, editing teacher, manager |
+
+## Privacy
+
+The block stores no personal data of its own.
+
+## Development
+
+```bash
+php admin/tool/phpunit/cli/init.php
+vendor/bin/phpunit --testsuite block_tarsus_testsuite
+```
+
+## Credits
+
+Developed by lern.link GmbH and Vadym Nersesov. Tarsus and the Flexudy Brain
+are products of Flexudy. This plugin is not affiliated with Moodle HQ.
 
 ## License
 
-GNU GPL v3 or later — https://www.gnu.org/licenses/
+GNU GPL v3 or later: https://www.gnu.org/licenses/
