@@ -51,8 +51,8 @@ vendor/bin/phpunit --testsuite block_tarsus_testsuite
 
 ## Credits
 
-Developed by lern.link GmbH and Vadym Nersesov. Tarsus and the Flexudy Brain
-are products of Flexudy. This plugin is not affiliated with Moodle HQ.
+Developed by Vadym Nersesov, lern.link GmbH. Tarsus and the Flexudy Brain are
+products of Tarsus GmbH.
 
 ## License
 
